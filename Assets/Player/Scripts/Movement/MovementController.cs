@@ -21,6 +21,7 @@ public class MovementController
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+
         Vector3 moveDirection = _head.right * horizontal + _head.forward * vertical;
 
         float speed = Input.GetKey(KeyCode.LeftShift) ? _runSpeed : _walkSpeed;

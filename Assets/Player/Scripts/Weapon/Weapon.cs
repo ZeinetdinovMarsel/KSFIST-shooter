@@ -23,6 +23,7 @@ public class Weapon : MonoBehaviour
     public string WeaponName => _weaponName;
     public int CurrentAmmo => _currentAmmo;
     public int MaxAmmo => _maxAmmo;
+    public float Range => _range;
 
     public void Shoot(Vector3 position, Vector3 direction)
     {
