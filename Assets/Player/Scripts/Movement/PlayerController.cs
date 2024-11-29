@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private MovementController _movementController;
     [SerializeField] private JumpController _jumpController;
-
+    [SerializeField] private CrouchController _crouchController;
     private CharacterController _characterController;
     private Vector3 _velocity;
     private bool _isGrounded;
@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         _movementController.Initialize(_characterController);
-
+        _crouchController.Initialize(_characterController);
     }
 
     private void Update()
