@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class BulletTrail : MonoBehaviour
 {
-    private Vector3 _startPosition;
     private Vector3 _endPosition;
     private LineRenderer _lineRenderer;
     [SerializeField] private float _speed = 30f;
@@ -19,7 +18,8 @@ public class BulletTrail : MonoBehaviour
         _lineRenderer.SetPosition(0, transform.position);
         _lineRenderer.SetPosition(1, transform.position + transform.forward * _trailLength);
 
-        if (Vector3.Distance(transform.position, _endPosition) < 1 || Vector3.Distance(transform.position + transform.forward * _trailLength, _endPosition) < 1)
+        if (Vector3.Distance(transform.position, _endPosition) < 1 
+            || Vector3.Distance(transform.position + transform.forward * _trailLength, _endPosition) < 1)
         {
             ReturnToPool();
         }
@@ -29,7 +29,6 @@ public class BulletTrail : MonoBehaviour
 
     public void Initialize(Vector3 startPosition, Vector3 endPosition)
     {
-        _startPosition = startPosition;
         _endPosition = endPosition;
 
         transform.position = startPosition;

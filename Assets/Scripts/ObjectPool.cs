@@ -33,11 +33,16 @@ public class ObjectPool : MonoBehaviour
         {
             if (_allObjects.Count >= _maxPoolSize)
             {
-                Destroy(_allObjects[0]);
+                obj = _allObjects[0];
+                obj.SetActive(false);
                 _allObjects.RemoveAt(0);
+                _allObjects.Add(obj);
             }
-
-            obj = CreateObject();
+            else
+            {
+                obj = CreateObject();
+            }
+            
         }
 
         obj.SetActive(true);
@@ -54,6 +59,7 @@ public class ObjectPool : MonoBehaviour
     {
         GameObject obj = Instantiate(_objectPrefab);
         _allObjects.Add(obj);
+        _pool.Enqueue(obj);
         obj.SetActive(false);
         return obj;
     }
