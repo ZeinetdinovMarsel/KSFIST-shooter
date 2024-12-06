@@ -14,7 +14,7 @@ public class PatrolState : EnemyState
 
     public override void UpdateState()
     {
-        if (_enemy.IsPlayerInDetectionRange())
+        if (_enemy.IsPlayerInFieldOfView())
         {
             _enemy.SwitchState(new ChaseState(_enemy));
             return;
@@ -32,10 +32,10 @@ public class PatrolState : EnemyState
         else
         {
             _enemy.MoveTo(_patrolDestination);
-            if (Vector3.Distance(_enemy.transform.position, _patrolDestination) < 1f)
+            if (Vector3.Distance(_enemy.transform.position, _patrolDestination) < 7)
             {
                 _isWaiting = true;
-                _patrolWaitTimer = Random.Range(1f, _enemy.PatrolWaitTime);
+                _patrolWaitTimer = Random.Range(0f, _enemy.PatrolWaitTime);
             }
         }
     }

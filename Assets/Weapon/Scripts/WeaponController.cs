@@ -39,5 +39,9 @@ public class WeaponController : MonoBehaviour
                 }
             }
         }
+        if (Input.GetButton("Reload"))
+        {
+            StartCoroutine(_weaponManager.CurrentWeapon.Reload());
+        }
     }
 }

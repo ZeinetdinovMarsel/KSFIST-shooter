@@ -6,12 +6,17 @@ public class AttackState : EnemyState
 
     public override void UpdateState()
     {
-        if (!_enemy.IsPlayerInAttackRange())
+        if (!_enemy.IsPlayerInAttackRange() || !_enemy.IsPlayerInFieldOfView())
         {
             _enemy.SwitchState(new ChaseState(_enemy));
             return;
         }
 
-        _enemy.ShootAtPlayer();
+        _enemy.RotateTowardsPlayer();
+
+        if (_enemy.IsFacingPlayer())
+        {
+            _enemy.ShootAtPlayer();
+        }
     }
 }

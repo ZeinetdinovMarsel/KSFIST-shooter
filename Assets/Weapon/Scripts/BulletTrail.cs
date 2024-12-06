@@ -19,7 +19,7 @@ public class BulletTrail : MonoBehaviour
         _lineRenderer.SetPosition(1, transform.position + transform.forward * _trailLength);
 
         if (Vector3.Distance(transform.position, _endPosition) < 1 
-            || Vector3.Distance(transform.position + transform.forward * _trailLength, _endPosition) < 1)
+            || Vector3.Distance(transform.position + transform.forward * _trailLength, _endPosition + transform.forward * _trailLength) < 1)
         {
             ReturnToPool();
         }

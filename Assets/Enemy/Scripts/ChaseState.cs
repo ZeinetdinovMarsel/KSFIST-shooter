@@ -12,9 +12,9 @@ public class ChaseState : EnemyState
             return;
         }
 
-        if (!_enemy.IsPlayerInDetectionRange())
+        if (!_enemy.IsPlayerInFieldOfView())
         {
-            _enemy.SwitchState(new PatrolState(_enemy));
+            _enemy.SwitchState(new SearchState(_enemy, _enemy.Player.position));
             return;
         }
 

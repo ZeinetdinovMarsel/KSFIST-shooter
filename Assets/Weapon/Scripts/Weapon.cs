@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Weapon : MonoBehaviour
 {
@@ -6,6 +7,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private string _weaponName;
     [SerializeField] private int _maxAmmo = 30;
     [SerializeField] private float _damage = 10f;
+    [SerializeField] private float _reloadTime = 1;
     public float FireRate = 0.2f;
 
     [Header("Shooting Settings")]
@@ -13,13 +15,13 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float _range = 50f;
 
     [Header("Effects")]
-    [SerializeField] ObjectPool _bulletTrailPool;
-    [SerializeField] ObjectPool _hitDecalPool;
-    [SerializeField] MuzzleFlash _muzzleFlash;
-
+    [SerializeField] private ObjectPool _bulletTrailPool;
+    [SerializeField] private ObjectPool _hitDecalPool;
+    [SerializeField] private MuzzleFlash _muzzleFlash;
 
     private int _currentAmmo;
-    private bool _canShoot = true;
+    [SerializeField] private bool _canShoot = true;
+    private bool _isReloading = false;
 
     private void Awake()
     {
@@ -31,28 +33,33 @@ public class Weapon : MonoBehaviour
     public int MaxAmmo => _maxAmmo;
     public float Range => _range;
 
-    public void Update()
-    {
-        if (Input.GetButtonUp("Fire1") && _muzzleFlash != null || (!_canShoot || _currentAmmo <= 0))
-        {
-            _muzzleFlash?.StopFlash();
-        }
-
-        if (Input.GetButtonDown("Reload"))
-        {
-            _currentAmmo = _maxAmmo;
-        }
-    }
     public void Shoot(Vector3 position, Vector3 direction)
     {
-        if (!_canShoot || _currentAmmo <= 0) return;
+        if (!_canShoot || _isReloading || _currentAmmo <= 0) return;
 
         _currentAmmo--;
         PerformRaycast(position, direction);
 
-        _muzzleFlash?.PlayFlash();
+        if (_muzzleFlash != null)
+        {
+            _muzzleFlash.PlayFlash();
+            StartCoroutine(StopMuzzleFlash());
+        }
 
         StartCoroutine(FireCooldown());
+    }
+
+    public IEnumerator Reload()
+    {
+        if (_isReloading || _currentAmmo == _maxAmmo) yield break;
+        _isReloading = true;
+        _canShoot = false;
+
+        yield return new WaitForSeconds(_reloadTime);
+
+        _currentAmmo = _maxAmmo;
+        _isReloading = false;
+        _canShoot = true;
     }
 
     private void PerformRaycast(Vector3 position, Vector3 direction)
@@ -63,7 +70,6 @@ public class Weapon : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, _range))
         {
-
             Health targetHealth = hit.collider.GetComponent<Health>();
             if (targetHealth != null)
             {
@@ -82,12 +88,17 @@ public class Weapon : MonoBehaviour
         trail.GetComponent<BulletTrail>()?.Initialize(FirePoint.position, endPoint);
     }
 
-
-    private System.Collections.IEnumerator FireCooldown()
+    private IEnumerator FireCooldown()
     {
-
         _canShoot = false;
+        yield return null;
         yield return new WaitForSeconds(FireRate);
         _canShoot = true;
+    }
+
+    private IEnumerator StopMuzzleFlash()
+    {
+        yield return new WaitForSeconds(FireRate);
+        _muzzleFlash.StopFlash();
     }
 }
