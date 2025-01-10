@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public class PatrolState : EnemyState
 {
     private Vector3 _patrolDestination;
-    private float _patrolWaitTimer;
+    private float _patrolWaitTimer = 5;
     private bool _isWaiting;
 
     public PatrolState(EnemyAI enemy) : base(enemy)
@@ -35,7 +35,7 @@ public class PatrolState : EnemyState
             if (Vector3.Distance(_enemy.transform.position, _patrolDestination) < 7)
             {
                 _isWaiting = true;
-                _patrolWaitTimer = Random.Range(0f, _enemy.PatrolWaitTime);
+                _patrolWaitTimer = Random.Range(1f, _enemy.PatrolWaitTime);
             }
         }
     }

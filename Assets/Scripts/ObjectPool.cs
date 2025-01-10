@@ -20,7 +20,7 @@ public class ObjectPool : MonoBehaviour
             CreateObject();
         }
     }
-
+   
     public GameObject GetObject()
     {
         GameObject obj;
@@ -44,7 +44,6 @@ public class ObjectPool : MonoBehaviour
             }
             
         }
-
         obj.SetActive(true);
         return obj;
     }

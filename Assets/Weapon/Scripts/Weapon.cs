@@ -48,7 +48,14 @@ public class Weapon : MonoBehaviour
 
         StartCoroutine(FireCooldown());
     }
+    public void Reloaded()
+    {
+        if (_isReloading || _currentAmmo == _maxAmmo) return;
 
+        _currentAmmo = _maxAmmo;
+        _isReloading = false;
+        _canShoot = true;
+    }
     public IEnumerator Reload()
     {
         if (_isReloading || _currentAmmo == _maxAmmo) yield break;
