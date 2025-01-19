@@ -30,6 +30,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private Transform _head;
 
     private EnemyState _currentState;
+    private Health _health;
     private float _distanceToPlayer;
     private Vector3 _lastKnownPosition;
     private bool _isMoving;
@@ -44,6 +45,8 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        _health = GetComponent<Health>();
+        _health.OnDie += Die;
         IsPlayerInFieldOfView();
         _currentState = new PatrolState(this);
 
@@ -155,5 +158,14 @@ public class EnemyAI : MonoBehaviour
     public void UpdateLastKnownPosition(Vector3 position)
     {
         _lastKnownPosition = position;
+    }
+
+    public void Die()
+    {
+        _agent.enabled = false;
+        _weapon.transform.parent = null;
+        _weapon.GetComponent<Collider>().isTrigger = false;
+        _weapon.AddComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        this.enabled = false;
     }
 }

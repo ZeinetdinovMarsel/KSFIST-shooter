@@ -6,15 +6,17 @@ public class Health : MonoBehaviour
     [SerializeField] private float _maxHealth = 100f;
     [SerializeField] private float _currentHealth;
 
-    [SerializeField] private Ragdoll _ragdoll;
-
+    private Ragdoll _ragdoll;
     public float CurrentHealth => _currentHealth;
     public bool IsAlive => _currentHealth > 0;
 
     public event Action OnHit;
+    public event Action OnDie;
     private void Start()
     {
         _currentHealth = _maxHealth;
+
+        _ragdoll = GetComponentInChildren<Ragdoll>();
         _ragdoll.DisableRagdoll();
 
         foreach (var rb in _ragdoll.rbs)
@@ -48,6 +50,8 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
-        _ragdoll.EnableRagdoll();
+        OnDie?.Invoke();
+        _ragdoll?.EnableRagdoll();
+        this.enabled = false;
     }
 }
