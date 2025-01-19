@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Events;
 using System;
+using Unity.VisualScripting;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private MultiAimConstraint _multiAimConstraint;
     [SerializeField] private Rig _arms;
     [SerializeField] private Transform _head;
+
     private EnemyState _currentState;
     private float _distanceToPlayer;
     private Vector3 _lastKnownPosition;
@@ -34,6 +36,7 @@ public class EnemyAI : MonoBehaviour
 
     public bool IsMoving => _isMoving;
     public float SearchDuration => _searchDuration;
+    public float ViewAngle => _viewAngle;
 
     public event Action OnShoot;
     public event Action OnReload;
@@ -49,7 +52,7 @@ public class EnemyAI : MonoBehaviour
     private void Update()
     {
         _distanceToPlayer = Vector3.Distance(transform.position, Player.position);
-        _isMoving = _agent.velocity.magnitude > _agent.speed/4;
+        _isMoving = _agent.velocity.magnitude > _agent.speed / 4;
         _currentState?.UpdateState();
         Debug.Log(_currentState.ToString());
     }
@@ -57,6 +60,14 @@ public class EnemyAI : MonoBehaviour
     public void SwitchState(EnemyState newState)
     {
         _currentState = newState;
+        if (_currentState is AttackState)
+        {
+            _multiAimConstraint.weight = 1;
+        }
+        else
+        {
+            _multiAimConstraint.weight = 0;
+        }
     }
 
     public void MoveTo(Vector3 destination)
@@ -69,32 +80,49 @@ public class EnemyAI : MonoBehaviour
 
     public bool IsPlayerInAttackRange() => _distanceToPlayer <= _attackRange;
 
-    public bool IsPlayerInFieldOfView()
+    public bool IsPlayerInFieldOfView(float FOV = -1)
     {
-        _multiAimConstraint.weight = 0;
+        if (FOV < 0)
+        {
+            FOV = _viewAngle;
+        }
+
+
         Vector3 directionToPlayer = (Player.position - _head.position).normalized;
         float angle = Vector3.Angle(_head.forward, directionToPlayer);
 
-        if (angle > _viewAngle / 2 || !(_distanceToPlayer <= _detectionRange))
+        if (angle > FOV / 2 || !(_distanceToPlayer <= _detectionRange))
+        {
             return false;
+        }
 
         if (Physics.Raycast(_head.position, directionToPlayer, out RaycastHit hit, _detectionRange, _wallsAndPlayerLayer))
         {
             if (hit.transform != Player)
+            {
                 return false;
+            }
         }
-        _multiAimConstraint.weight = 1;
+
         return true;
     }
 
     public void RotateTowardsPlayer()
     {
         Vector3 directionToPlayer = (Player.position - transform.position).normalized;
+
         Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+
         targetRotation.x = transform.rotation.x;
         targetRotation.z = transform.rotation.z;
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * _agent.angularSpeed / 2);
+
+        transform.rotation = Quaternion.Lerp(
+            transform.rotation,
+            targetRotation,
+            Time.deltaTime * _agent.angularSpeed / 100
+        );
     }
+
 
     public void ShootAtPlayer()
     {
@@ -105,14 +133,16 @@ public class EnemyAI : MonoBehaviour
             OnReload?.Invoke();
             return;
         }
+        _arms.weight = 1;
         OnShoot?.Invoke();
         StartCoroutine(AttackRoutine());
     }
 
     public void ReloadEnd()
     {
-        _arms.weight = 1;
+
         _weapon.Reloaded();
+
         OnReloadEnd?.Invoke();
     }
 

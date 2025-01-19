@@ -12,6 +12,7 @@ public class EnemyAnimator : MonoBehaviour
         _enemyAI = GetComponent<EnemyAI>();
         _health = GetComponent<Health>();
         _animator = GetComponent<Animator>();
+
         _enemyAI.OnShoot += ShootAnimation;
         _enemyAI.OnReload += ReloadAnimationStart;
         _enemyAI.OnReloadEnd += ReloadAnimationEnd;
