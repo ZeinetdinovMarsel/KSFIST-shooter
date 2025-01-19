@@ -83,8 +83,18 @@ public class Weapon : MonoBehaviour
                 targetHitBox.OnRaycastHit(_damage);
             }
 
-            GameObject decal = _hitDecalPool.GetObject();
-            decal.GetComponent<HitDecal>()?.Initialize(hit.point, hit.normal, _hitDecalPool, hit.transform);
+            Rigidbody targetRb = hit.collider.GetComponent<Rigidbody>();
+            if (targetRb != null)
+            {
+                targetRb.AddForce(direction*2000);
+            }
+
+            if(hit.collider.gameObject.layer == 7)
+            {
+                GameObject decal = _hitDecalPool.GetObject();
+                decal.GetComponent<HitDecal>()?.Initialize(hit.point, hit.normal, _hitDecalPool, hit.transform);
+            }
+           
 
             endPoint = hit.point;
         }
