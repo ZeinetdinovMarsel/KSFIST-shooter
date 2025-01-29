@@ -49,7 +49,7 @@ public class EnemyAI : MonoBehaviour
         _health.OnDie += Die;
         IsPlayerInFieldOfView();
         _currentState = new PatrolState(this);
-
+        
     }
 
     private void Update()
@@ -163,9 +163,7 @@ public class EnemyAI : MonoBehaviour
     public void Die()
     {
         _agent.enabled = false;
-        _weapon.transform.parent = null;
-        _weapon.GetComponent<Collider>().isTrigger = false;
-        _weapon.AddComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        _weapon.UnequipWeapon();
         this.enabled = false;
     }
 }

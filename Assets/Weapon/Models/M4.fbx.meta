@@ -3,7 +3,42 @@ guid: f78106c84ffae9d46b9931882237581b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aluminium
+    second: {fileID: 2100000, guid: d3aa54af90de89146b248c66f830a103, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: anodised aluminium
+    second: {fileID: 2100000, guid: e8fc82810eac12c43916ad8ccc7d17f8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: brass
+    second: {fileID: 2100000, guid: 27e5475c8b77aa3478421cc282ee9e95, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: copper
+    second: {fileID: 2100000, guid: 9dd6e00bfb3a0a447b79ec8d6744b98c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: glass
+    second: {fileID: 2100000, guid: 1ef14d8df68838c42a199ecfee6c41fc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: polyamide
+    second: {fileID: 2100000, guid: 4e3661201b5d9a84b9b7fc04909a39a8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: red emission
+    second: {fileID: 2100000, guid: fa6e7659cbaf4d34d89b5f36234ebad7, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

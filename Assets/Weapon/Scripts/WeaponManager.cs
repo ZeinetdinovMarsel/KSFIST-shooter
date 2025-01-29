@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class WeaponManager : MonoBehaviour
     public Weapon CurrentWeapon;
     private int _currentWeaponIndex = -1;
 
+    public event Action OnWeaponChanged;
     private void Start()
     {
         EquipWeapon(0);
@@ -64,10 +66,16 @@ public class WeaponManager : MonoBehaviour
         _currentWeaponIndex = index;
         CurrentWeapon = _weapons[_currentWeaponIndex];
         CurrentWeapon.gameObject.SetActive(true);
+        OnWeaponChanged?.Invoke();
     }
 
     private void EquipWeapon(Weapon weapon)
     {
+        if (weapon.IsEquiped)
+        {
+            return;
+        }
+
         if (CurrentWeapon != null)
         {
             CurrentWeapon.gameObject.SetActive(false);
@@ -75,9 +83,8 @@ public class WeaponManager : MonoBehaviour
 
         CurrentWeapon = weapon;
         _weapons.Add(weapon);
-        CurrentWeapon.transform.SetParent(_weaponHolder);
-        CurrentWeapon.transform.localPosition = Vector3.zero;
-        CurrentWeapon.transform.localRotation = Quaternion.identity;
+        CurrentWeapon.EquipWeapon(_weaponHolder);
         CurrentWeapon.gameObject.SetActive(true);
+        OnWeaponChanged?.Invoke();
     }
 }

@@ -3,7 +3,47 @@ guid: 6072c62b8a59827479f86ed164424a31
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aluminium
+    second: {fileID: 2100000, guid: e124ef76c6bacb5498533d13e14c3bd9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: anodised aluminium
+    second: {fileID: 2100000, guid: db114d6fc0306b842a8885f10c487de3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: brass
+    second: {fileID: 2100000, guid: 12654090ad272654bb6b3f692dfd9845, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: copper
+    second: {fileID: 2100000, guid: ad3066fa5e2d0884885b9dc3ce6aa603, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: h-190
+    second: {fileID: 2100000, guid: 7d9303a1b11a6e84f884b83b5e70279d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: polyamide
+    second: {fileID: 2100000, guid: a43b5fbaa64326640983d43d04de8528, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: resin
+    second: {fileID: 2100000, guid: 80f0646b88934604a9410f653758c48c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: white
+    second: {fileID: 2100000, guid: 3133167cb3a430f4582ab1578ee1beb6, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -17,14 +17,17 @@ public class Health : MonoBehaviour
         _currentHealth = _maxHealth;
 
         _ragdoll = GetComponentInChildren<Ragdoll>();
-        _ragdoll.DisableRagdoll();
-
-        foreach (var rb in _ragdoll.rbs)
+        if (_ragdoll != null)
         {
-            if (rb.gameObject.layer != 3)
+            _ragdoll.DisableRagdoll();
+
+            foreach (var rb in _ragdoll.rbs)
             {
-                HitBox hb = rb.gameObject.AddComponent<HitBox>();
-                hb.Health = this;
+                if (rb.gameObject.layer != 3)
+                {
+                    HitBox hb = rb.gameObject.AddComponent<HitBox>();
+                    hb.Health = this;
+                }
             }
         }
     }
@@ -33,8 +36,8 @@ public class Health : MonoBehaviour
     {
         if (!IsAlive) return;
 
-        OnHit?.Invoke();
         _currentHealth -= amount;
+        OnHit?.Invoke();
         if (_currentHealth <= 0)
         {
             Die();
@@ -53,5 +56,10 @@ public class Health : MonoBehaviour
         OnDie?.Invoke();
         _ragdoll?.EnableRagdoll();
         this.enabled = false;
+    }
+
+    public float GetHealthParts()
+    {
+        return _currentHealth / _maxHealth;
     }
 }

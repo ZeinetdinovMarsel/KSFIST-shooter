@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System;
+using Unity.VisualScripting;
 
 public class Weapon : MonoBehaviour
 {
@@ -23,11 +25,14 @@ public class Weapon : MonoBehaviour
     [SerializeField] private bool _canShoot = true;
     private bool _isReloading = false;
 
+    public event Action OnCurrAmmoChanged;
+
+    private bool _isEquiped = false;
     private void Awake()
     {
         _currentAmmo = _maxAmmo;
     }
-
+    public bool IsEquiped => _isEquiped;
     public string WeaponName => _weaponName;
     public int CurrentAmmo => _currentAmmo;
     public int MaxAmmo => _maxAmmo;
@@ -38,6 +43,7 @@ public class Weapon : MonoBehaviour
         if (!_canShoot || _isReloading || _currentAmmo <= 0) return;
 
         _currentAmmo--;
+        OnCurrAmmoChanged?.Invoke();
         PerformRaycast(position, direction);
 
         if (_muzzleFlash != null)
@@ -65,6 +71,7 @@ public class Weapon : MonoBehaviour
         yield return new WaitForSeconds(_reloadTime);
 
         _currentAmmo = _maxAmmo;
+        OnCurrAmmoChanged?.Invoke();
         _isReloading = false;
         _canShoot = true;
     }
@@ -86,15 +93,15 @@ public class Weapon : MonoBehaviour
             Rigidbody targetRb = hit.collider.GetComponent<Rigidbody>();
             if (targetRb != null)
             {
-                targetRb.AddForce(direction*2000);
+                targetRb.AddForce(direction * 2000);
             }
 
-            if(hit.collider.gameObject.layer == 7)
+            if (hit.collider.gameObject.layer == 7)
             {
                 GameObject decal = _hitDecalPool.GetObject();
                 decal.GetComponent<HitDecal>()?.Initialize(hit.point, hit.normal, _hitDecalPool, hit.transform);
             }
-           
+
 
             endPoint = hit.point;
         }
@@ -117,5 +124,46 @@ public class Weapon : MonoBehaviour
     {
         yield return new WaitForSeconds(FireRate);
         _muzzleFlash.StopFlash();
+    }
+
+    public void EquipWeapon(Transform _weaponHolder = null)
+    {
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Collider>().isTrigger = true;
+        if (_weaponHolder != null)
+        {
+            this.transform.SetParent(_weaponHolder);
+            this.transform.localPosition = Vector3.zero;
+            this.transform.localRotation = Quaternion.identity;
+        }
+        Transform[] transform = GetComponentsInChildren<Transform>();
+
+        foreach (Transform t in transform)
+        {
+            t.gameObject.layer = 3;
+        }
+
+        _isEquiped = true;
+    }
+
+    public void UnequipWeapon()
+    {
+        GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<Collider>().isTrigger = false;
+
+        this.transform.SetParent(null);
+
+        Transform[] transform = GetComponentsInChildren<Transform>();
+
+        foreach (Transform t in transform)
+        {
+            t.gameObject.layer = 0;
+        }
+
+        _isEquiped = false;
+    }
+    private void OnEnable()
+    {
+        _canShoot = true;
     }
 }
