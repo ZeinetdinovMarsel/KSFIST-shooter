@@ -9,20 +9,23 @@ public class UI : MonoBehaviour
     [SerializeField] private TMP_Text _maxAmmo;
     [SerializeField] private TMP_Text _weaponName;
     [SerializeField] private GameObject _deathScreen;
+    [SerializeField] private GameObject _winScreen;
 
-    [SerializeField] private Health _health;
+    [SerializeField] private Health _playerHealth;
+    [SerializeField] private Health _enemyHealth;
     [SerializeField] private WeaponManager _weaponManager;
     private Weapon _weapon;
 
     private void Start()
     {
-        _health.OnHit += ChangeHealth;
-        _health.OnDie += Die;
+        _playerHealth.OnHit += ChangeHealth;
+        _playerHealth.OnDie += Lose;
+        _enemyHealth.OnDie += Win;
         _weaponManager.OnWeaponChanged += ChangeWeapon;
     }
     private void ChangeHealth()
     {
-        _healthImage.fillAmount = _health.GetHealthParts();
+        _healthImage.fillAmount = _playerHealth.GetHealthParts();
     }
 
     private void ChangeWeapon()
@@ -41,10 +44,17 @@ public class UI : MonoBehaviour
         _currAmmo.text = _weapon.CurrentAmmo.ToString();
     }
 
-    private void Die()
+    private void Win()
+    {
+        _winScreen.SetActive(true);
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+        Time.timeScale = 0;
+    }
+    private void Lose()
     {
         _deathScreen.SetActive(true);
-        Cursor.lockState= CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
         Time.timeScale = 0;
     }
